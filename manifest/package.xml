@@ -14,5 +14,9 @@
         <members>createRecordWidget</members>
         <name>LightningComponentBundle</name>
     </types>
+    <types>
+        <members>CheckIsProperlyNested</members>
+        <name>ApexClass</name>
+    </types>
     <version>52.0</version>
 </Package>

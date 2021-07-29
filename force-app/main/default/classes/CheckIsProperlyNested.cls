@@ -9,14 +9,14 @@ public with sharing class CheckIsProperlyNested implements Schedulable {
 
 
     public void execute(SchedulableContext ctx) {
-        
+
         List<Widget__c> widgets = [SELECT Id, Value__c, Is_Properly_Nested__c, Is_checked__c 
             FROM Widget__c 
             WHERE Is_checked__c = false
             LIMIT 100];
 
             for (Widget__c wdt : widgets) {
-                if(checkString(wdt.Value__c) {
+                if(checkString(wdt.Value__c)) {
                     wdt.Is_checked__c = true;
                 }
             }
