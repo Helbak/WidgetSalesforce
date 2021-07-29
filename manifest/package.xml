@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Widget__c.Value__c</members>
+        <members>Widget__c.Is_Properly_Nested__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Widget__c</members>
+		<name>CustomObject</name>
+    </types>
+    <types>
+        <members>createRecordWidget</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <version>52.0</version>
+</Package>
