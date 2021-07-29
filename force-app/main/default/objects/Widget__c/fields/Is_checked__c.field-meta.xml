@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_checked__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>information about record is the value of this record checked</description>
+    <externalId>false</externalId>
+    <label>Is checked</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
