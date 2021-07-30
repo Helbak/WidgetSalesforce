@@ -4,9 +4,16 @@
             <lightning-record-edit-form object-api-name={widgetObject}>
                 <lightning-input-field field-name={valueFieldName} onchange={handleValue}>
                 </lightning-input-field>
+                    <br/>
+                <lightning-button 
+                    label=" Cancel " 
+                    title="Cancel"
+                    onclick={toggleView}>
+                </lightning-button>
                 <lightning-button 
                     variant="brand" 
                     label="Create Widget Record" 
+                    class="slds-m-left_x-small"
                     onclick={createRequestRecord}>
                 </lightning-button>
             </lightning-record-edit-form>

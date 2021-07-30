@@ -1,4 +1,6 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, wire } from 'lwc';
+import getUserInfo from '@salesforce/apex/UserDetails.getUserInfo';
+import Id from '@salesforce/user/Id';
 import { createRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import WIDGET_OBJECT from '@salesforce/schema/Widget__c';
@@ -11,6 +13,9 @@ export default class CreateRecordWidget extends LightningElement {
     valueWidget;
     isNested = false;
     showInput = false;
+
+    @wire(getUserInfo, { userId: Id }) 
+    userData;
 
     toggleView() {
         this.showInput = !this.showInput;
@@ -58,17 +63,19 @@ export default class CreateRecordWidget extends LightningElement {
 
     createRequestRecord() {    
 
-        if(!this.isNested) {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error creating record. ',
-                    message: 'Value should be Properly Nested',
-                    variant: 'error',
-                }),
-            );
-            return;
+        if(this.userData.data.Profile.Name != 'System Administrator' && this.userData.data.Profile.Name != 'Widget Masters') {
+            if(!this.isNested) {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error creating record. ',
+                        message: 'Value should be Properly Nested',
+                        variant: 'error',
+                    }),
+                );
+                return;
+            }
         }
-
+        
         const fields ={};        
         fields[VALUE_FIELD.fieldApiName]= this.valueWidget;
         

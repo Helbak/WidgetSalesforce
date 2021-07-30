@@ -15,6 +15,7 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>UserDetails</members>
         <members>CheckIsProperlyNested</members>
         <name>ApexClass</name>
     </types>
