@@ -17,6 +17,7 @@ public with sharing class CheckIsProperlyNestedTests {
 
         System.assert(!isNested, 'Wrong String is not Nested');
         System.assert(!isNestedTwo, 'Wrong String is not Nested');
+        System.assert(!isNestedThree, 'Wrong String is not Nested');
 
     }
 
