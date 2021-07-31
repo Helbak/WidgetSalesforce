@@ -11,9 +11,6 @@
 // }
 
 
-
-
-
 public with sharing class CheckIsProperlyNested implements Schedulable {
 
 
@@ -37,11 +34,7 @@ public with sharing class CheckIsProperlyNested implements Schedulable {
             }
     }
 
-    private static Boolean checkString (String value) {
-
-        if(value == null) {
-            return false;
-        }
+    public static Boolean checkString (String value) {
 
         List<String> listValues = value.split('');
         List<String>  openBrackets = new List<String> {'[','{','('};
