@@ -16,14 +16,23 @@ public with sharing class CheckIsProperlyNested implements Schedulable {
 
     public void execute(SchedulableContext ctx) {
 
-        List<Widget__c> widgets = [SELECT Id, Value__c, Is_Properly_Nested__c, Is_checked__c, Owner.Profile.Name 
+        List<Widget__c> widgets = [SELECT Id, Value__c, Is_Properly_Nested__c, Is_checked__c, Owner.Profile.Name, Owner.Email
             FROM Widget__c 
             WHERE Is_checked__c = false
             LIMIT 100];
 
+            if(widgets.size() < 1) {
+                return;
+            }
+            List<Widget__c> notNested = new List<Widget__c>();
+
             for (Widget__c wdt : widgets) {
+                wdt.Is_checked__c = true;
                 if(checkString(wdt.Value__c)) {
-                    wdt.Is_checked__c = true;
+                    wdt.Is_Properly_Nested__c = true;
+                }
+                if(!checkString(wdt.Value__c) && wdt.Owner.Email != null) {
+                    notNested.add(wdt);
                 }
             }
 
@@ -32,6 +41,31 @@ public with sharing class CheckIsProperlyNested implements Schedulable {
             } catch (DmlException e) {
                 System.debug('CheckIsProperlyNested dml update ERROR ');
             }
+
+            if(notNested.size() > 0) {
+                sendEmails(notNested);
+            }
+    }
+
+    public static void sendEmails (List<Widget__c> widgets) {
+
+        Set<String> toAddresses = new Set<String>();
+
+        for (Widget__c wdt : widgets) {
+            toAddresses.add(wdt.Owner.Email);
+        }
+
+        Messaging.reserveSingleEmailCapacity(toAddresses.size());
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+
+        mail.setToAddresses(new List<String>(toAddresses));
+        mail.setSenderDisplayName('Salesforce Support');
+        mail.setSubject('New Widget is not properly nested ');
+        mail.setBccSender(false);
+        mail.setUseSignature(false);
+        mail.setPlainTextBody('New Widget is not properly nested ');
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+
     }
 
     public static Boolean checkString (String value) {

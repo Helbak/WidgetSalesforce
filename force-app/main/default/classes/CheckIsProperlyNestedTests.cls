@@ -2,29 +2,61 @@
 public with sharing class CheckIsProperlyNestedTests {
 
     @IsTest
-    private static void testSchedulExecute() {        
+    private static void testSchedulExecuteNotNested() {
 
-        Widget__c widget = new Widget__c(Value__c = '([Nested String])');
+        Widget__c widget = new Widget__c(Value__c = '(Not Nested String]', Name='Not Nested');
         insert widget;
-        
+
+        Test.starttest();
+
+        CheckIsProperlyNested checker = new CheckIsProperlyNested();
+        checker.execute(null);
+
+        List<Widget__c> wdt = [SELECT Id, Is_Properly_Nested__c, Is_checked__c, Name 
+            FROM Widget__c 
+            WHERE Name LIKE 'Not Nested' 
+            LIMIT 1];
+        Test.stopTest();
+
+        System.assert(wdt[0].Is_checked__c, 'CheckIsProperlyNested TestNot Nested String');
+        System.assert(!wdt[0].Is_Properly_Nested__c, 'CheckIsProperlyNested Test Not Nested String');
+
+    }
+
+    @IsTest
+    private static void testSchedulExecuteNested() {
+
+        Widget__c widget = new Widget__c(Value__c = '([Nested String])', Name='Test Name');
+        insert widget;
+
+        Test.starttest();
+
+        CheckIsProperlyNested checker = new CheckIsProperlyNested();
+        checker.execute(null);
+
+        List<Widget__c> wdt = [SELECT Id, Is_Properly_Nested__c, Is_checked__c, Name 
+            FROM Widget__c 
+            WHERE Name LIKE 'Test Name' 
+            LIMIT 1];
+        Test.stopTest();
+
+        System.assert(wdt[0].Is_checked__c, 'CheckIsProperlyNested Test Properly Nested String');
+        System.assert(wdt[0].Is_Properly_Nested__c, 'CheckIsProperlyNested Test Properly Nested String');
+
+    }
+
+    @IsTest
+    private static void testSchedulTemporaryPlug() {        
+
         Test.starttest();
         
         CheckIsProperlyNested checker = new CheckIsProperlyNested();
-        String hour = String.valueOf(Datetime.now().hour());
-        String min = String.valueOf(Datetime.now().minute()); 
-        String ss = String.valueOf(Datetime.now().second());
-        String sch = ss + ' ' + min + ' ' + hour + ' * * ?';
+        String sch = '0 55 * * * ?';
 
         system.schedule('RunCheckIsProperlyNested', sch, checker);
 
-        List<List<Widget__c>> wdt = [FIND '([Nested String])'
-            IN ALL FIELDS 
-            RETURNING Widget__c (Id, Value__c, Is_Properly_Nested__c, Is_checked__c) 
-            LIMIT 1];
-
         Test.stopTest();
 
-        // System.assert(wdt[0][0].Is_Properly_Nested__c, 'CheckIsProperlyNested Test Properly Nested String');
    }
 
     @IsTest
