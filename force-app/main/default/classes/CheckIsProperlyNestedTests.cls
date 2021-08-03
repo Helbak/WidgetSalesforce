@@ -2,6 +2,34 @@
 public with sharing class CheckIsProperlyNestedTests {
 
     @IsTest
+    private static void testSendEmails() {
+
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User']; 
+        User u = new User(Alias = 'standt', Email='standarduserhd77@testorg.com', 
+            EmailEncodingKey='UTF-8', LastName='Testing', LanguageLocaleKey='en_US', 
+            LocaleSidKey='en_US', ProfileId = p.Id, 
+            TimeZoneSidKey='America/Los_Angeles', UserName='standarduserhd77@testorg.com');
+
+        System.runAs(u) {
+            Widget__c widget = new Widget__c(Value__c = '(Not Nested String]', Name='Not Nested');
+            insert widget;
+        }
+
+        Test.starttest();
+        List<Widget__c> widgets = [SELECT Id, Value__c, Is_Properly_Nested__c, Is_checked__c, Owner.Profile.Name, Owner.Email
+            FROM Widget__c 
+            WHERE Name = 'Not Nested'
+            LIMIT 1];
+
+        CheckIsProperlyNested.sendEmails(widgets);
+        Integer invocations = Limits.getEmailInvocations();
+        Test.stopTest();
+    
+        system.assertEquals(1, invocations, 'An email should be sent');
+
+    }
+
+    @IsTest
     private static void testSchedulExecuteNotNested() {
 
         Widget__c widget = new Widget__c(Value__c = '(Not Nested String]', Name='Not Nested');
