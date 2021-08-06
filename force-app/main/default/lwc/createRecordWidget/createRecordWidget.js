@@ -28,6 +28,7 @@ export default class CreateRecordWidget extends LightningElement {
     }
 
     checkValueHelper(valueWidget) {
+        
         const openBrackets = "[{(";
         const closedBrackets = "]})";
         let stringAllBrackets = "";
